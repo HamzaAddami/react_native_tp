@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { View, Text, Button, FlatList, TouchableOpacity } from "react-native";
+import AppBar from "../component/AppBar";
+import App from "../App";
 
 
 export default function TodoListScreen({ navigation }) {
@@ -25,18 +27,19 @@ export default function TodoListScreen({ navigation }) {
   }
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 24, marginBottom: 10 }}>Mes tâches</Text>
+      <Text style={{ fontSize: 24, marginBottom: 10 }}>Mes taches</Text>
       <FlatList
         data={todos}
         keyExtractor={(i) => i.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate("Détails", { todoId: item.id })}
+          onPress={() => navigation.navigate("Détails", { todoId: item.id })}
           >
             <Text style={{ padding: 10, fontSize: 18 }}>{item.title}</Text>
           </TouchableOpacity>
         )}
       />
+      <AppBar />
     </View>
   );
 }
