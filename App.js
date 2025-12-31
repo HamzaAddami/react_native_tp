@@ -4,6 +4,8 @@ import AppNavigator from "./navigation/AppNavigator";
 import AuthProvider, { AuthContext } from "./context/AuthContext";
 import AppDrawer from "./navigation/AppDrawer";
 import LoginScreen from "./screens/LoginScreen";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 
 function RootNavigator() {
@@ -24,10 +26,12 @@ function RootNavigator() {
 // Main App pour le TP_5
 export default function App() {
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <RootNavigator />
-      </NavigationContainer>
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
+      </AuthProvider>
+    </Provider>
   );
 }
