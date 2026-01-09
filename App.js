@@ -89,3 +89,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#121212",
   },
 });
+
+
+// Main App pour le TP_8 avec Firebase
+
+import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider } from "./context/AuthContext";
+import AppStack from "./navigation/AppStack";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+export default function App() {
+return (
+  <SafeAreaProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppStack />
+      </AuthProvider>
+    </ThemeProvider>
+  </SafeAreaProvider>
+);
+}

@@ -1,41 +1,49 @@
-import { FlatList, Text, ActivityIndicator, Button } from "react-native";
-import { useEffect, useState, useContext } from "react";
-import { fetchTodosFetch } from "../services/api";
-import { ThemeContext } from "../context/ThemeContext";
-export default function TodoListFetchScreen() {
-  const [todos, setTodos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { theme, toggleTheme } = useContext(ThemeContext);
+import { View, Text, FlatList, Button, TextInput } from "react-native";
+import { useEffect, useContext, useState } from "react";
+import { useTodoStore } from "../store/useTodoStore";
+import { AuthContext } from "../context/AuthContext";
+import AppBar from "../components/AppBar";
+export default function TodoListScreen() {
+  const { user } = useContext(AuthContext);
+  const { todos, loadTodos, addTodo } = useTodoStore();
+  const [title, setTitle] = useState("");
   useEffect(() => {
-    fetchTodosFetch()
-      .then(setTodos)
-      .catch(() => setError("Impossible de charger les tâches"))
-      .finally(() => setLoading(false));
-  }, []);
-  if (loading) return <ActivityIndicator size="large" />;
-  console.log(todos)
+    if (user) {
+      loadTodos(user.uid);
+    }
+  }, [user]);
+  const handleAddTodo = () => {
+    if (!title.trim()) return;
+    addTodo(user.uid, title);
+    setTitle("");
+  };
   return (
-    <>
-      <Button
-        title={`Passer en mode ${theme === "light" ? "dark" : "light"}`}
-        onPress={toggleTheme}
-      />
-      {error && <Text>{error}</Text>}
+    <View style={{ flex: 1 }}>
+      <AppBar title="Mes tâches" />
+      {/* Champ de saisie */}
+      <View style={{ padding: 15 }}>
+        <TextInput
+          placeholder="Nouvelle tâche..."
+          value={title}
+          onChangeText={setTitle}
+          style={{
+            borderWidth: 1,
+            borderColor: "#ccc",
+            padding: 10,
+            borderRadius: 6,
+            marginBottom: 10,
+          }}
+        />
+        <Button title="Ajouter la tâche" onPress={handleAddTodo} />
+      </View>
+      {/* Liste */}
       <FlatList
         data={todos}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(i) => i.id.toString()}
         renderItem={({ item }) => (
-          <Text
-            style={{
-              padding: 10,
-              color: theme === "dark" ? "#ffffff" : "#000000",
-            }}
-          >
-            {item.title}
-          </Text>
+          <Text style={{ padding: 15, fontSize: 16 }}>• {item.title}</Text>
         )}
       />
-    </>
+    </View>
   );
 }
